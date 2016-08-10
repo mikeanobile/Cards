@@ -1,0 +1,135 @@
+<html>
+<head>
+    <link rel="stylesheet" media="screen" href="css/normalise.css" />
+    <link rel="stylesheet" media="screen" href="css/canvases.css" />
+</head>
+<body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script src="js/lib/underscore-min-1.4.3.js"></script>
+    <script src="js/lib/toolbox.js"></script>
+<script data-main="js/test" src="js/lib/require.js"></script>
+<script>
+/*
+function Tileset(options){
+		this.onspriteload = options.onspriteload || function(){};
+		this.onReadyCb = options.onReady || function(){};
+		this.tileSpec = options.tileSpec || {};
+
+		this.sprite = new Image();
+		this.sprite.onload = this.onSpriteLoad.bind(this);
+		this.spriteLoaded = false;
+		this.sprite.src = options.spritePath;
+
+		$.getJSON(options.specPath, this.onSpecLoad.bind(this));
+	}
+
+	Tileset.prototype.onSpriteLoad = function(e){
+		this.spriteLoaded = true;
+		this.onReady();
+	};
+
+	Tileset.prototype.onSpecLoad = function(data){
+		this.specLoaded = true;
+		this.tileSpec = data;
+		this.onReady();
+	};
+
+	Tileset.prototype.onReady = function(){
+		if(this.specLoaded && this.spriteLoaded && _.isFunction(this.onReadyCb)){
+			this.onReadyCb();
+		}
+	};
+
+	Tileset.prototype.getSprite = function(){
+		return this.sprite;
+	};
+
+	Tileset.prototype.getTileSpec = function(){
+		return this.tileSpec;
+	};
+	
+	var map = [
+			[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+			[3,0,0,0,0,2,1,3,0,0,0,0,0,0,0,0,0,2,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+			[3,0,0,0,2,1,3,0,0,0,0,0,0,0,0,0,0,0,2,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+			[3,0,0,0,2,3,0,0,2,1,3,0,0,0,0,0,0,0,0,0,0,0,0,0,2,3,0,0,0,0,0,0,0,0,0,2],
+			[3,0,0,0,2,3,0,0,2,1,1,1,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+			[3,0,0,0,2,3,0,0,0,0,2,1,1,1,1,3,0,0,0,0,0,0,0,0,0,0,2,3,0,0,0,0,0,0,0,2],
+			[3,0,0,0,0,0,0,0,0,0,0,2,1,3,0,0,0,0,0,0,0,0,2,3,0,0,0,0,0,0,0,0,0,0,0,2],
+			[3,0,0,0,0,0,0,0,0,0,2,1,3,0,0,0,2,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+			[3,0,0,0,0,0,0,0,0,0,2,3,0,0,0,2,1,1,3,0,0,0,0,0,0,0,0,0,0,0,0,0,2,1,1,1],
+			[3,0,0,0,2,3,0,0,0,0,2,1,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,1,1,1,1,1],
+			[3,0,0,0,0,0,0,0,0,0,2,3,0,0,2,1,1,1,3,0,0,0,0,0,0,0,0,0,0,0,0,0,2,1,1,1],
+			[3,0,0,0,0,0,0,0,0,2,1,3,0,0,0,0,0,0,0,0,0,0,0,0,0,2,3,0,0,0,2,1,1,1,1,1],
+			[3,0,0,0,0,0,0,0,0,0,2,3,0,0,0,0,0,0,2,1,1,1,3,0,0,0,0,0,2,1,1,1,1,1,1,1],
+			[3,0,0,0,0,0,0,0,0,0,0,0,0,2,3,0,0,0,0,0,0,0,0,0,0,0,2,1,1,1,1,1,1,1,1,1],
+			[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+		],
+		tileSize = 24,
+		$body = $('body'),
+		$window = $(window),
+		$canvas,
+		bgRenderer,
+		canvases = [],
+		spritesToLoad = 2
+		bgTileset = new Tileset({
+			spritePath: 'img/sf2-map.png',
+			specPath: 'spec/sf2-map.json',
+			onReady: loadCb
+		});
+		
+		function run(){
+
+		// build layers
+		_(4).times(function(i){
+			$canvas = $('<canvas width="'+(map[0].length * tileSize)+'" height="'+(map.length * tileSize)+'" data-index="'+i+'" class="gamecanvas canvas'+i+'"/>');
+			$body.append($canvas);
+			canvases.push($canvas);
+		});
+		
+
+		
+				// run game
+		function gameLoop(){
+			characterRenderer.draw();
+			//monster.chooseAction();
+			//monster2.chooseAction();
+			//monster3.chooseAction();
+
+			window.requestAnimationFrame(gameLoop);
+		}
+		//gameLoop();
+
+		centerCanvases();
+	}
+			bgRenderer = new BackgroundRenderer({
+			$el: canvases[1],
+			map: map,
+			tileSet: bgTileset,
+			tileSize: tileSize
+		});
+
+	// resize
+	function centerCanvases(){
+		_(canvases).each(function($canvas){
+			$canvas.css({
+				top: ($window.height() - $canvas.height())/2
+			});
+		});
+	}
+	$window.resize(_.throttle(centerCanvases,250));
+
+		
+			function loadCb(){
+		spritesToLoad--;
+		if(!spritesToLoad){ run(); }
+	}
+		
+		//window.onload = function() { run(); };
+		*/
+</script>
+
+</body>
+</html>
+
+		
